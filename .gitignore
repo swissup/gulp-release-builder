@@ -1,5 +1,6 @@
 *
-!.gitignore
 !.gitattributes
+!.gitignore
 !gulpfile.js
 !package.json
+!README.md
