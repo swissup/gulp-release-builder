@@ -12,5 +12,5 @@ gulp help
 gulp --module=highlight
 
 # Generate highlight release with additional modules
-gulp --module=highlight --additional=testimonials,askit:1.1.0 --reset
+gulp --module=swissup/highlight --additional=testimonials,vendor/package:1.1.0 --reset
 ```
