@@ -7,9 +7,9 @@
     "gulp-prompt": "^0.1.2",
     "gulp-size": "^2.0.0",
     "gulp-util": "^3.0.7",
-    "gulp-zip": "*",
+    "gulp-zip": "^3.1.0",
+    "node-swissup": "git://github.com/swissup/node-swissup.git#master",
     "run-sequence": "^1.1.5",
-    "yargs": "^3.32.0",
-    "node-swissup": "git://github.com/swissup/node-swissup.git#master"
+    "yargs": "^3.32.0"
   }
 }

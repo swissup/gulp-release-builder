@@ -1,11 +1,36 @@
 var gulp    = require('gulp-help')(require('gulp')),
     gutil   = require('gulp-util'),
+    prompt  = require('gulp-prompt'),
     argv    = require('yargs').argv,
     zip     = require('gulp-zip'),
     size    = require('gulp-size'),
     notify  = require("gulp-notify"),
     runSequence = require('run-sequence'),
     swissup = require('node-swissup');
+
+gulp.task('prompt', false, [], function(cb) {
+    if (argv.module) {
+        return cb();
+    }
+
+    return gulp.src('package.json')
+        .pipe(
+            prompt.prompt([{
+                type: 'input',
+                name: 'module',
+                message: 'Which module would you like to build?',
+                validate: function(module) {
+                    if (!module.length) {
+                        return false;
+                    }
+                    return true;
+                }
+            }],
+            function(res) {
+                argv.module = res.module;
+            })
+        );
+});
 
 gulp.task('reset', 'Remove previously generated and downloaded files', [], function(cb) {
     swissup.setPackage(argv.module).reset(cb);
@@ -37,18 +62,12 @@ gulp.task('archive', false, [], function() {
         }));
 });
 
-gulp.task('default', 'Generate extension release', [], function(cb) {
-    if (!argv.module) {
-        gutil.log('Missing parameter:', gutil.colors.cyan('--module=vendor/module:1.0.0'));
-        gutil.log('Use', gutil.colors.magenta('gulp help'), 'for more information');
-        cb();
-    } else {
-        var tasks = ['composer', 'archive', cb];
-        if (argv.reset) {
-            tasks.unshift('reset');
-        }
-        runSequence.apply(this, tasks);
+gulp.task('default', 'Generate extension release', ['prompt'], function(cb) {
+    var tasks = ['composer', 'archive', cb];
+    if (argv.reset) {
+        tasks.unshift('reset');
     }
+    runSequence.apply(this, tasks);
 }, {
     options: {
         'module=vendor/module:1.0.0': 'Module to build with optional version tag',
