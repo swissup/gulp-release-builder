@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-help": "^1.6.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-prompt": "^0.1.2",
+    "gulp-size": "^2.0.0",
+    "gulp-util": "^3.0.7",
+    "gulp-zip": "*",
+    "run-sequence": "^1.1.5",
+    "yargs": "^3.32.0",
+    "node-swissup": "git://github.com/swissup/node-swissup.git#master"
+  }
+}
