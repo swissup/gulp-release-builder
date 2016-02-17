@@ -49,7 +49,7 @@ gulp.task('composer', false, [], function(cb) {
 gulp.task('archive', false, [], function() {
     var s = size();
     swissup.setPackage(argv.module);
-    return gulp.src(swissup.getPath('release/**/*'))
+    return gulp.src(swissup.getPath('src/**/*'))
         .pipe(zip(swissup.getArchiveName()))
         .pipe(gulp.dest(swissup.getPath('bin')))
         .pipe(s)
