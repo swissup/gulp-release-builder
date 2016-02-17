@@ -73,6 +73,6 @@ gulp.task('default', 'Generate extension release', ['prompt'], function(cb) {
         'module=vendor/module:1.0.0': 'Module to build with optional version tag',
         'reset': 'Remove previously generated and downloaded files',
         'additional=vendor/module:0.2.0,vendor/module2': 'Addional modules to include into archive',
-        // 'nochecker': 'Exclude SubscriptionChecker module'
+        'nochecker': 'Exclude SubscriptionChecker module'
     }
 });
