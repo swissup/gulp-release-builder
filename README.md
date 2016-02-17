@@ -11,7 +11,8 @@
 ### Installation
 
 ```bash
-git clone git@github.com:swissup/gulp-release-builder.git
+git clone git@github.com:swissup/gulp-release-builder.git && cd gulp-release-builder
+npm install
 ```
 
 ### Standard Usage Examples
