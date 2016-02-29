@@ -5,6 +5,7 @@ var gulp    = require('gulp-help')(require('gulp')),
     zip     = require('gulp-zip'),
     size    = require('gulp-size'),
     notify  = require("gulp-notify"),
+    open    = require('open'),
     runSequence = require('run-sequence'),
     swissup = require('node-swissup');
 
@@ -48,6 +49,9 @@ gulp.task('composer', false, [], function(cb) {
 
 gulp.task('archive', false, [], function() {
     var s = size();
+    notify.on('click', function (options) {
+        open(options.dir);
+    });
     swissup.setPackage(argv.module);
     return gulp.src(swissup.getPath('src/**/*'))
         .pipe(zip(swissup.getArchiveName()))
@@ -56,8 +60,11 @@ gulp.task('archive', false, [], function() {
         .pipe(notify({
             onLast: true,
             message: function () {
-                return 'See <%= file.path %> ' + s.prettySize;
+                return s.prettySize + ' <%= file.path %>';
             },
+            // open: __dirname + '/' + swissup.getPath('bin'),
+            wait: true,
+            dir: __dirname + '/' + swissup.getPath('bin'),
             title: 'Release is Ready'
         }));
 });
