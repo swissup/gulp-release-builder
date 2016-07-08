@@ -32,6 +32,9 @@ var builder = {
         if (argv.modules) {
             return argv.modules.split(',');
         }
+        if (argv.module.indexOf(',')) {
+            return argv.module.split(',');
+        }
         return [argv.module];
     },
     finish: function() {
