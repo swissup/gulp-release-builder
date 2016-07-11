@@ -190,6 +190,7 @@ gulp.task('default', 'Generate extension release', ['prompt'], function(cb) {
         'modules=vendor/module:1.0.0,vendor/module:1.0.0': 'Multiple modules to build',
         'reset': 'Remove previously generated and downloaded files',
         'additional=vendor/module:0.2.0,vendor/module2': 'Addional modules to include into archive',
-        'nochecker': 'Exclude SubscriptionChecker module'
+        'nochecker': 'Exclude SubscriptionChecker module',
+        'nowindow': 'Do not open archive folder when task is finished'
     }
 });
