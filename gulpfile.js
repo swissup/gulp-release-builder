@@ -16,6 +16,7 @@ var builder = {
     callback: function() {},
     finished: 0,
     builds: [],
+    modules: [],
 
     addBuild: function(build) {
         this.builds.push(build);
@@ -29,19 +30,47 @@ var builder = {
         return this.getModules().length;
     },
     getModules: function() {
+        if (this.modules.length) {
+            return this.modules;
+        }
+
+        var moduleNames = [];
         if (argv.modules) {
-            return argv.modules.split(',');
+            moduleNames = argv.modules.split(',');
+        } else if (argv.module.indexOf(',')) {
+            moduleNames = argv.module.split(',');
+        } else {
+            moduleNames = [argv.module];
         }
-        if (argv.module.indexOf(',')) {
-            return argv.module.split(',');
-        }
-        return [argv.module];
+
+        moduleNames.forEach(function(moduleName) {
+            this.modules.push({
+                name: moduleName,
+                nochecker: true
+            });
+            if (!argv.nochecker) {
+                this.modules.push({
+                    name: moduleName,
+                    nochecker: false
+                });
+            }
+        }, this);
+        return this.modules;
     },
     finish: function() {
         this.finished++;
         if (this.finished === this.getSize()) {
             this.callback();
         }
+    },
+    getBinDirs: function() {
+        return this.builds.reduce(function(dirs, build) {
+            var dir = build.dir + '/' + build.path;
+            if (dirs.indexOf(dir) === -1) {
+                dirs.push(dir);
+            }
+            return dirs;
+        }, []);
     }
 };
 
@@ -71,17 +100,19 @@ gulp.task('prompt', false, [], function(cb) {
 
 gulp.task('reset', 'Remove previously generated and downloaded files', [], function(cb) {
     builder.setCallback(cb).getModules().forEach(function(module) {
-        swissup().setPackage(module).reset(builder.finish.bind(builder));
+        swissup()
+            .setNochecker(module.nochecker)
+            .setPackage(module.name)
+            .reset(builder.finish.bind(builder));
     });
 });
 
 gulp.task('composer', false, [], function(cb) {
     builder.setCallback(cb).getModules().forEach(function(module) {
-        swissup().setPackage(module)
-            .initComposerJson(
-                argv.additional ? argv.additional : "",
-                argv.nochecker  ? true : false
-            )
+        swissup()
+            .setNochecker(module.nochecker)
+            .setPackage(module.name)
+            .initComposerJson(argv.additional ? argv.additional : "")
             .runComposer(builder.finish.bind(builder));
     });
 });
@@ -89,15 +120,19 @@ gulp.task('composer', false, [], function(cb) {
 gulp.task('archive', false, [], function(cb) {
     var tasks = [];
     builder.getModules().forEach(function(module) {
-        var packager = swissup().setPackage(module);
+        var packager = swissup()
+            .setNochecker(module.nochecker)
+            .setPackage(module.name);
+
         tasks[tasks.length] = gulp.src(packager.getPath('src/**/*'))
             .pipe(zip(packager.getArchiveName()))
-            .pipe(gulp.dest(packager.getPath('bin')));
+            .pipe(gulp.dest(packager.getVendorName() + '/__bin'));
 
         builder.addBuild({
-            name: module,
+            name: module.name,
+            nochecker: module.nochecker,
             dir: __dirname,
-            path: packager.getPath('bin'),
+            path: packager.getVendorName() + '/__bin',
             file: packager.getArchiveName()
         });
     });
@@ -117,8 +152,8 @@ gulp.task('report', false, [], function() {
 
     // notifier
     notifier.on('click', function (options) {
-        builder.builds.forEach(function(build) {
-            open(build.dir + '/' + build.path);
+        builder.getBinDirs().forEach(function(dir) {
+            open(dir);
         });
     });
 
@@ -136,9 +171,9 @@ gulp.task('report', false, [], function() {
     });
 
     // open all folders
-    if (!argv.n) {
-        builder.builds.forEach(function(build) {
-            open(build.dir + '/' + build.path);
+    if (!argv.nowindow) {
+        builder.getBinDirs().forEach(function(dir) {
+            open(dir);
         });
     }
 });
