@@ -18,18 +18,15 @@ npm install
 ### Standard Usage Examples
 
 ```bash
-# Run wizard
-gulp
-
-# Show help
-gulp help
-
-# Generate highlight release from master
-gulp --module=highlight
-
-# Generate highlight 1.0.0 release with additional modules
-gulp --module=swissup/highlight:1.0.0 --additional=testimonials,vendor/package:1.1.0
-
-# magento 1.x modules are supported too
-gulp --module=tm/highlight
+# Generate two highlight releases: with and without subscription checker
+gulp --module=swissup/highlight:1.0.0
 ```
+
+### Advanced Usage Examples
+
+Description | Command
+------------|--------
+Make release without subscription checker | `gulp --module=swissup/highlight:1.0.0 --nochecker`
+Make release with additional modules | `gulp --module=swissup/highlight:1.0.0 --additional=swissup/ajaxsearch:1.0.0`
+Make releases for multiple modules at once | `gulp --module=swissup/highlight:1.0.0,swissup/ajaxsearch:1.0.0`
+Show help | `gulp help`
