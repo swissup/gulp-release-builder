@@ -151,18 +151,12 @@ gulp.task('report', false, [], function() {
     console.log(table.toString());
 
     // notifier
-    notifier.on('click', function (options) {
-        builder.getBinDirs().forEach(function(dir) {
-            open(dir);
-        });
-    });
-
     var title = 'Release is ready';
     if (builder.builds.length > 1) {
         title = builder.builds.length + ' releases are ready';
     }
     notifier.notify({
-        wait: true,
+        wait: false,
         icon: void 0,
         title: title,
         message: builder.builds.reduce(function(message, build) {
