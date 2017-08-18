@@ -46,7 +46,8 @@ var builder = {
         moduleNames.forEach(function(moduleName) {
             this.modules.push({
                 name: moduleName,
-                nochecker: true
+                nochecker: true,
+                nocore: argv.nocore
             });
             if (!argv.nochecker) {
                 this.modules.push({
@@ -102,6 +103,7 @@ gulp.task('reset', 'Remove previously generated and downloaded files', [], funct
     builder.setCallback(cb).getModules().forEach(function(module) {
         swissup()
             .setNochecker(module.nochecker)
+            .setNocore(module.nocore)
             .setPackage(module.name)
             .reset(builder.finish.bind(builder));
     });
@@ -111,6 +113,7 @@ gulp.task('composer', false, [], function(cb) {
     builder.setCallback(cb).getModules().forEach(function(module) {
         swissup()
             .setNochecker(module.nochecker)
+            .setNocore(module.nocore)
             .setPackage(module.name)
             .initComposerJson(argv.additional ? argv.additional : "")
             .runComposer(builder.finish.bind(builder));
@@ -122,6 +125,7 @@ gulp.task('archive', false, [], function(cb) {
     builder.getModules().forEach(function(module) {
         var packager = swissup()
             .setNochecker(module.nochecker)
+            .setNocore(module.nocore)
             .setPackage(module.name);
 
         tasks[tasks.length] = gulp.src(packager.getPath('src/**/*'))
@@ -186,6 +190,7 @@ gulp.task('default', 'Generate extension release', ['prompt'], function(cb) {
         'modules=vendor/module:1.0.0,vendor/module:1.0.0': 'Multiple modules to build',
         'additional=vendor/module:0.2.0,vendor/module2': 'Addional modules to include into archive',
         'nochecker': 'Exclude SubscriptionChecker module',
-        'nowindow': 'Do not open archive folder when task is finished'
+        'nowindow': 'Do not open archive folder when task is finished',
+        'nocore': 'Skip tm/core module'
     }
 });
