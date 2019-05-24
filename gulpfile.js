@@ -16,7 +16,7 @@ var builder = {
     callback: function() {},
     finished: 0,
     builds: [],
-    modules: [],
+    packages: [],
 
     addBuild: function(build) {
         this.builds.push(build);
@@ -30,33 +30,33 @@ var builder = {
         return this.getModules().length;
     },
     getModules: function() {
-        if (this.modules.length) {
-            return this.modules;
+        if (this.packages.length) {
+            return this.packages;
         }
 
-        var moduleNames = [];
-        if (argv.modules) {
-            moduleNames = argv.modules.split(',');
-        } else if (argv.module.indexOf(',')) {
-            moduleNames = argv.module.split(',');
+        var packageNames = [];
+        if (argv.packages) {
+            packageNames = argv.packages.split(',');
+        } else if (argv.package.indexOf(',')) {
+            packageNames = argv.package.split(',');
         } else {
-            moduleNames = [argv.module];
+            packageNames = [argv.package];
         }
 
-        moduleNames.forEach(function(moduleName) {
-            this.modules.push({
-                name: moduleName,
+        packageNames.forEach(function(packageName) {
+            this.packages.push({
+                name: packageName,
                 nochecker: true,
                 nocore: argv.nocore
             });
             if (!argv.nochecker) {
-                this.modules.push({
-                    name: moduleName,
+                this.packages.push({
+                    name: packageName,
                     nochecker: false
                 });
             }
         }, this);
-        return this.modules;
+        return this.packages;
     },
     finish: function() {
         this.finished++;
@@ -76,7 +76,7 @@ var builder = {
 };
 
 gulp.task('prompt', false, [], function(cb) {
-    if (argv.module || argv.modules) {
+    if (argv.package || argv.packages) {
         return cb();
     }
 
@@ -84,37 +84,37 @@ gulp.task('prompt', false, [], function(cb) {
         .pipe(
             prompt.prompt([{
                 type: 'input',
-                name: 'module',
-                message: 'Which module would you like to build?',
-                validate: function(module) {
-                    if (!module.length) {
+                name: 'package',
+                message: 'Which package would you like to build?',
+                validate: function(package) {
+                    if (!package.length) {
                         return false;
                     }
                     return true;
                 }
             }],
             function(res) {
-                argv.module = res.module;
+                argv.package = res.package;
             })
         );
 });
 
 gulp.task('reset', 'Remove previously generated and downloaded files', [], function(cb) {
-    builder.setCallback(cb).getModules().forEach(function(module) {
+    builder.setCallback(cb).getModules().forEach(function(package) {
         swissup()
-            .setNochecker(module.nochecker)
-            .setNocore(module.nocore)
-            .setPackage(module.name)
+            .setNochecker(package.nochecker)
+            .setNocore(package.nocore)
+            .setPackage(package.name)
             .reset(builder.finish.bind(builder));
     });
 });
 
 gulp.task('composer', false, [], function(cb) {
-    builder.setCallback(cb).getModules().forEach(function(module) {
+    builder.setCallback(cb).getModules().forEach(function(package) {
         swissup()
-            .setNochecker(module.nochecker)
-            .setNocore(module.nocore)
-            .setPackage(module.name)
+            .setNochecker(package.nochecker)
+            .setNocore(package.nocore)
+            .setPackage(package.name)
             .initComposerJson(argv.additional ? argv.additional : "")
             .runComposer(builder.finish.bind(builder));
     });
@@ -122,19 +122,19 @@ gulp.task('composer', false, [], function(cb) {
 
 gulp.task('archive', false, [], function(cb) {
     var tasks = [];
-    builder.getModules().forEach(function(module) {
+    builder.getModules().forEach(function(package) {
         var packager = swissup()
-            .setNochecker(module.nochecker)
-            .setNocore(module.nocore)
-            .setPackage(module.name);
+            .setNochecker(package.nochecker)
+            .setNocore(package.nocore)
+            .setPackage(package.name);
 
         tasks[tasks.length] = gulp.src(packager.getPath('src/**/*'))
             .pipe(zip(packager.getArchiveName()))
             .pipe(gulp.dest(packager.getVendorName() + '/__bin'));
 
         builder.addBuild({
-            name: module.name,
-            nochecker: module.nochecker,
+            name: package.name,
+            nochecker: package.nochecker,
             dir: __dirname,
             path: packager.getVendorName() + '/__bin',
             file: packager.getArchiveName()
@@ -186,11 +186,11 @@ gulp.task('default', 'Generate extension release', ['prompt'], function(cb) {
     );
 }, {
     options: {
-        'module=vendor/module:1.0.0': 'Module to build with optional version tag',
-        'modules=vendor/module:1.0.0,vendor/module:1.0.0': 'Multiple modules to build',
-        'additional=vendor/module:0.2.0,vendor/module2': 'Addional modules to include into archive',
-        'nochecker': 'Exclude SubscriptionChecker module',
+        'package=vendor/package:1.0.0': 'Module to build with optional version tag',
+        'packages=vendor/package:1.0.0,vendor/package:1.0.0': 'Multiple packages to build',
+        'additional=vendor/package:0.2.0,vendor/package2': 'Addional packages to include into archive',
+        'nochecker': 'Exclude SubscriptionChecker package',
         'nowindow': 'Do not open archive folder when task is finished',
-        'nocore': 'Skip tm/core module'
+        'nocore': 'Skip tm/core package'
     }
 });
