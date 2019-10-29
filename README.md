@@ -19,14 +19,14 @@ npm install
 
 ```bash
 # Generate two highlight releases: with and without subscription checker
-gulp --module=swissup/highlight:1.0.0
+gulp --package=swissup/highlight:1.0.0
 ```
 
 ### Advanced Usage Examples
 
 Description | Command
 ------------|--------
-Make release without subscription checker | `gulp --module=swissup/highlight:1.0.0 --nochecker`
-Make release with additional modules | `gulp --module=swissup/highlight:1.0.0 --additional=swissup/ajaxsearch:1.0.0`
-Make releases for multiple modules at once | `gulp --module=swissup/highlight:1.0.0,swissup/ajaxsearch:1.0.0`
+Make release without subscription checker | `gulp --package=swissup/highlight:1.0.0 --nochecker`
+Make release with additional modules | `gulp --package=swissup/highlight:1.0.0 --additional=swissup/ajaxsearch:1.0.0`
+Make releases for multiple modules at once | `gulp --package=swissup/highlight:1.0.0,swissup/ajaxsearch:1.0.0`
 Show help | `gulp help`
