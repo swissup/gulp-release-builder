@@ -5,14 +5,14 @@
     "filesize": "^3.3.0",
     "gulp": "^3.9.0",
     "gulp-help": "^1.6.1",
-    "gulp-prompt": "^0.1.2",
+    "gulp-prompt": "^1.2.0",
     "gulp-size": "^2.0.0",
     "gulp-util": "^3.0.7",
     "gulp-zip": "^3.1.0",
     "merge-stream": "^1.0.0",
     "node-notifier": "^4.6.0",
     "node-swissup": "git://github.com/swissup/node-swissup.git#master",
-    "open": "0.0.5",
+    "open": "7.0.0",
     "run-sequence": "^1.1.5",
     "yargs": "^3.32.0"
   }
