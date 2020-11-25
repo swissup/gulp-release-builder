@@ -15,5 +15,9 @@
     "open": "7.0.0",
     "run-sequence": "^1.1.5",
     "yargs": "^3.32.0"
+  },
+  "scripts": {
+    "preshrinkwrap": "git checkout -- npm-shrinkwrap.json",
+    "postshrinkwrap": "git checkout -- npm-shrinkwrap.json"
   }
 }

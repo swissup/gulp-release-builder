@@ -2,5 +2,6 @@
 !.gitattributes
 !.gitignore
 !gulpfile.js
+!npm-shrinkwrap.json
 !package.json
 !README.md
