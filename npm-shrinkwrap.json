@@ -4,6 +4,7 @@
   "requires": true,
   "packages": {
     "": {
+      "name": "gulp-release-builder",
       "dependencies": {
         "cli-table": "^0.3.1",
         "filesize": "^3.3.0",
