@@ -19,5 +19,8 @@
   "scripts": {
     "preshrinkwrap": "git checkout -- npm-shrinkwrap.json",
     "postshrinkwrap": "git checkout -- npm-shrinkwrap.json"
+  },
+  "overrides": {
+    "graceful-fs": "^4.2.10"
   }
 }
