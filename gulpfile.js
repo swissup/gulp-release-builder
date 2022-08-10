@@ -8,7 +8,6 @@ var gulp    = require('gulp-help')(require('gulp')),
     fs      = require('fs'),
     filesize = require('filesize'),
     runSequence = require('run-sequence'),
-    notifier = require('node-notifier'),
     swissup = require('node-swissup'),
     merge = require('merge-stream');
 
@@ -153,20 +152,6 @@ gulp.task('report', false, [], function() {
         );
     });
     console.log(table.toString());
-
-    // notifier
-    var title = 'Release is ready';
-    if (builder.builds.length > 1) {
-        title = builder.builds.length + ' releases are ready';
-    }
-    notifier.notify({
-        wait: false,
-        icon: void 0,
-        title: title,
-        message: builder.builds.reduce(function(message, build) {
-            return message += build.name + ' ';
-        }, '')
-    });
 
     // open all folders
     if (!argv.nowindow) {
